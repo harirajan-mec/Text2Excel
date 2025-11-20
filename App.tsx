@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { Header } from './components/Header';
 import { InputArea } from './components/InputArea';
 import { DataPreview } from './components/DataPreview';
@@ -8,10 +8,25 @@ import { ExtractedData, ProcessingStatus } from './types';
 import { ArrowRight, Loader2, Download, AlertTriangle } from 'lucide-react';
 
 const App: React.FC = () => {
+  // Default to dark mode
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [inputText, setInputText] = useState<string>('');
   const [status, setStatus] = useState<ProcessingStatus>(ProcessingStatus.IDLE);
   const [data, setData] = useState<ExtractedData | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  // Handle theme changes
+  useEffect(() => {
+    if (theme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [theme]);
+
+  const toggleTheme = useCallback(() => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
+  }, []);
 
   const handleExtract = useCallback(async () => {
     if (!inputText.trim()) return;
@@ -45,14 +60,14 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50">
-      <Header />
+    <div className="min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 transition-colors duration-200">
+      <Header theme={theme} toggleTheme={toggleTheme} />
 
       <main className="flex-grow container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
         
         {/* Error Banner */}
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-50 border border-red-200 flex items-start gap-3 text-red-800 animate-in fade-in slide-in-from-top-4">
+          <div className="mb-6 p-4 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 flex items-start gap-3 text-red-800 dark:text-red-200 animate-in fade-in slide-in-from-top-4">
             <AlertTriangle className="w-5 h-5 shrink-0 mt-0.5" />
             <div>
               <h4 className="font-semibold">Processing Error</h4>
@@ -80,7 +95,7 @@ const App: React.FC = () => {
                 disabled={!inputText.trim() || status === ProcessingStatus.PROCESSING}
                 className={`w-full py-4 px-6 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center justify-center gap-2
                   ${!inputText.trim() || status === ProcessingStatus.PROCESSING
-                    ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none'
+                    ? 'bg-slate-200 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed shadow-none'
                     : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-blue-500/20 hover:shadow-blue-600/30 hover:-translate-y-0.5 active:translate-y-0'
                   }`}
               >
@@ -95,7 +110,7 @@ const App: React.FC = () => {
                   </>
                 )}
               </button>
-              <p className="text-center text-xs text-slate-400 mt-3">
+              <p className="text-center text-xs text-slate-400 dark:text-slate-500 mt-3">
                 Uses Gemini 2.5 Flash to identify tables, lists, and structured data automatically.
               </p>
             </div>
@@ -107,13 +122,13 @@ const App: React.FC = () => {
                <DataPreview data={data} />
             </div>
             
-            <div className="shrink-0">
+            <div className="shrink-0 flex flex-col gap-3">
                <button
                 onClick={handleDownload}
                 disabled={!data}
                 className={`w-full py-4 px-6 rounded-xl font-semibold shadow-lg transition-all duration-200 flex items-center justify-center gap-2
                   ${!data
-                    ? 'bg-slate-100 text-slate-300 border border-slate-200 cursor-not-allowed shadow-none'
+                    ? 'bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-300 dark:text-slate-600 cursor-not-allowed shadow-none'
                     : 'bg-green-600 hover:bg-green-700 text-white shadow-green-500/20 hover:shadow-green-600/30 hover:-translate-y-0.5 active:translate-y-0'
                   }`}
               >

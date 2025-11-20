@@ -31,6 +31,18 @@ export const extractDataFromText = async (text: string): Promise<ExtractedData> 
           },
           description: "The list of rows containing the data.",
         },
+        calendarEvent: {
+          type: Type.OBJECT,
+          description: "An optional calendar event if the text contains a specific schedule, meeting, or deadline.",
+          properties: {
+            title: { type: Type.STRING, description: "Event title." },
+            description: { type: Type.STRING, description: "Event description." },
+            startDate: { type: Type.STRING, description: "Start date/time in ISO format (YYYY-MM-DDTHH:mm:ss)." },
+            endDate: { type: Type.STRING, description: "End date/time in ISO format (YYYY-MM-DDTHH:mm:ss)." },
+            location: { type: Type.STRING, description: "Event location, if any." },
+          },
+          required: ["title", "description", "startDate", "endDate"],
+        },
       },
       required: ["filename", "columns", "rows"],
     };
@@ -46,6 +58,7 @@ export const extractDataFromText = async (text: string): Promise<ExtractedData> 
         3. Standardize dates to ISO format (YYYY-MM-DD) if possible, or keep as legible string.
         4. Ensure every row has a value for every column (use empty string or null if missing).
         5. Generate a concise filename based on the content.
+        6. If a specific event, meeting, or deadline is mentioned with date/time, extract it as a calendar event.
         
         Input Text:
         """
