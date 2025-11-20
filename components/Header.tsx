@@ -16,7 +16,7 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           </div>
           <div>
             <h1 className="text-xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              Text2Excel <span className="text-xs font-medium px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center gap-1"><Sparkles className="w-3 h-3" /> AI Powered</span>
+              SriScheduler <span className="text-xs font-medium px-2 py-0.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full flex items-center gap-1"><Sparkles className="w-3 h-3" /> AI Powered</span>
             </h1>
           </div>
         </div>
@@ -28,13 +28,6 @@ export const Header: React.FC<HeaderProps> = ({ theme, toggleTheme }) => {
           >
             {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 hidden sm:block"></div>
-          <a 
-            href="#" 
-            className="text-sm text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 transition-colors hidden sm:block"
-          >
-            Documentation
-          </a>
         </div>
       </div>
     </header>

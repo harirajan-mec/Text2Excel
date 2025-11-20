@@ -1,5 +1,5 @@
-import React from 'react';
-import { ClipboardPaste, Trash2, FileText } from 'lucide-react';
+import React, { useState } from 'react';
+import { ClipboardPaste, Trash2, FileText, AlertCircle } from 'lucide-react';
 
 interface InputAreaProps {
   value: string;
@@ -9,13 +9,18 @@ interface InputAreaProps {
 }
 
 export const InputArea: React.FC<InputAreaProps> = ({ value, onChange, disabled, onClear }) => {
+  const [pasteError, setPasteError] = useState<boolean>(false);
   
   const handlePaste = async () => {
     try {
       const text = await navigator.clipboard.readText();
       onChange(text);
+      setPasteError(false);
     } catch (err) {
       console.error('Failed to read clipboard contents: ', err);
+      setPasteError(true);
+      // Clear error message after 3 seconds
+      setTimeout(() => setPasteError(false), 3000);
     }
   };
 
@@ -26,11 +31,18 @@ export const InputArea: React.FC<InputAreaProps> = ({ value, onChange, disabled,
           <FileText className="w-4 h-4" />
           <h3>Source Text</h3>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 items-center">
+           {pasteError && (
+            <span className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1 mr-2 animate-in fade-in">
+              <AlertCircle className="w-3 h-3" />
+              <span>Blocked. Use Ctrl+V</span>
+            </span>
+           )}
            <button
             onClick={handlePaste}
             disabled={disabled}
             className="text-xs flex items-center gap-1 px-2 py-1 rounded hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-400 transition-colors disabled:opacity-50"
+            title="Paste from clipboard"
           >
             <ClipboardPaste className="w-3 h-3" /> Paste
           </button>
