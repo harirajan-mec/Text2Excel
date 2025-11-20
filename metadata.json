@@ -1,0 +1,5 @@
+{
+  "name": "Text to Excel AI Converter",
+  "description": "Instantly convert unstructured text into formatted Excel spreadsheets using Gemini AI.",
+  "requestFramePermissions": []
+}
